@@ -16,6 +16,8 @@ class Proxy
   def initialize(target_object)
     @object = target_object
     # ADD MORE CODE HERE
+    @operations = []
+    @operations = << :initialize
   end
 
   # WRITE CODE HERE
