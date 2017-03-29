@@ -13,38 +13,84 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # of the Proxy class is given in the AboutProxyObjectProject koan.
 
 class Proxy
-
+attr_reader :messages
+  
   def initialize(target_object)
     @object = target_object
-    # ADD MORE CODE HERE
-    @power = :off
-  end
-
-  # WRITE CODE HERE
-
-  def channel=(new_channel)
-    @channel = new_channel
-  end
-
-  def power
-    if @power == :off
-      @power = :on
-    else
-      @power = :off
-    end
-  end
-
-  def channel
-    @channel
-  end
-
-  def on?
-    @power == :on
-  end
-
-  def messages
+    @messages = []
   end
   
+  def called?(method_name)
+    @messages.include? method_name
+  end
+  
+  def number_of_times_called(method_name)
+    @messages.count method_name
+  end
+  
+  def method_missing(method_name, *args, &block)
+    if @object.respond_to? method_name then
+      # track each method called that target object can respond to
+      @messages.push method_name
+      
+      # call the method!
+      @object.send method_name, *args
+    else
+      # all other cases: default behavior (raises NoMethodError)
+      super method_name, *args, &block
+    end
+  end
+  # def initialize(target_object)
+  #   @object = target_object
+  #   # ADD MORE CODE HERE
+  #   @power = :off
+  #   @messages = []
+  # end
+
+  # # WRITE CODE HERE
+
+  # def channel=(new_channel)
+  #   @channel = new_channel
+  # end
+
+  # def power
+  #   if @power == :off
+  #     @power = :on
+  #   else
+  #     @power = :off
+  #   end
+  # end
+
+  # def channel
+  #   @channel
+  # end
+
+  # def on?
+  #   @power == :on
+  # end
+
+  # def messages
+  #   @messages
+  # end
+
+  # def called?(method_name)
+  #   @messages.include? method_name
+  # end
+
+  
+  # def method_missing(method_name, *args, &block)
+  #   if @object.respond_to? method_name then
+  #     # track each method called that target object can respond to
+  #     @messages.push method_name
+      
+  #     # call the method!
+  #     @object.send method_name, *args
+  #   else
+  #     # all other cases: default behavior (raises NoMethodError)
+  #     super method_name, *args, &block
+  #   end
+  
+  # end
 end
 
 # The proxy object should pass the following Koan:
